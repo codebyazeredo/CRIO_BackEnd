@@ -36,7 +36,7 @@ public class User {
     private String password;
 
     @Column(name = "type", length = 100)
-    private String type;
+    private Integer type;
     
     @Column(name = "created_At")
     private LocalDateTime createdAt;
