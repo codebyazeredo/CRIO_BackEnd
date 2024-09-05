@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.crio.api.domain.user.User;
 import com.crio.api.domain.user.UserRequestDTO;
+import com.crio.api.service.UserService;
 
 @RestController
 @RequestMapping("/api/user")
