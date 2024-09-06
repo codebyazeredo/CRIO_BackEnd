@@ -23,10 +23,10 @@ import lombok.Setter;
 public class User {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "name", length = 255, nullable = false)
+    @Column(name = "name", length = 255, nullable = false, unique = true)
     private String name;
     
     @Column(name = "email", length = 100, nullable = false, unique = true)
@@ -35,12 +35,12 @@ public class User {
     @Column(name = "password", length = 255, nullable = false)
     private String password;
 
-    @Column(name = "type", length = 100)
+    @Column(name = "type", nullable = false)
     private Integer type;
-    
-    @Column(name = "created_At")
+
+    @Column(name = "created_At", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_At")
+    @Column(name = "updated_At", nullable = false)
     private LocalDateTime updatedAt;
 }

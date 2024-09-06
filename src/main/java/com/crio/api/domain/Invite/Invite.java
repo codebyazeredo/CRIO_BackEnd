@@ -22,17 +22,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="event")
+@Table(name="invite")
 public class Invite {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     
     @Column(name = "confirmation")
-    private Boolean confirmation; 
-    
-    @ManyToMany
-    @JoinColumn(name="user_id")
-    private User user;
+    private Boolean confirmation;
 }
