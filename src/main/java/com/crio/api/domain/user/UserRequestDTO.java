@@ -1,9 +1,9 @@
 package com.crio.api.domain.user;
 
-public record UserRequestDTO(
+public record UserRequestDTO (
         String name,
         String email,
         String password,
-        Integer type) {
+        Integer type ) {
 }
 

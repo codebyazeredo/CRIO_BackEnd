@@ -38,9 +38,9 @@ public class User {
     @Column(name = "type", nullable = false)
     private Integer type;
 
-    @Column(name = "created_At", nullable = false)
+    @Column(name = "created_At")
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_At", nullable = false)
+    @Column(name = "updated_At")
     private LocalDateTime updatedAt;
 }
