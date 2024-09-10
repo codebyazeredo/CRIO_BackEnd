@@ -1,5 +1,6 @@
 package com.crio.api.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,6 +26,7 @@ public class UserService {
         newUser.setEmail(userRequestDTO.email());
         newUser.setPassword(userRequestDTO.password());
         newUser.setType(userRequestDTO.type());
+        newUser.setCreatedAt(LocalDateTime.now());
 
         userRepository.save(newUser);
         return newUser;
@@ -35,20 +37,21 @@ public class UserService {
     }
 
     public Optional<User> getUserById(UUID id){
-        return userRepository.findById(id);
+        return Optional.of(userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found")));
     }
 
-    public User updateUser(UUID id, User user){
+    public User updateUser(UUID id, UserRequestDTO dto){
         
-        User updatedUser = userRepository.findById(id).orElseThrow();
-        updatedUser.setName(user.getName());
-        updatedUser.setEmail(user.getEmail());
-        updatedUser.setPassword(user.getPassword());
-        updatedUser.setType(user.getType());
-        updatedUser.setCreatedAt(user.getCreatedAt());
-        updatedUser.setUpdatedAt(user.getUpdatedAt());
+        User updatedUser = getUserById(id).orElseThrow();
         
+        updatedUser.setName(dto.name());
+        updatedUser.setEmail(dto.email());
+        updatedUser.setPassword(dto.password());
+        updatedUser.setType(dto.type());
+        updatedUser.setUpdatedAt(LocalDateTime.now());
+
         return userRepository.save(updatedUser);
+
     }
 
     public void deleteUser (UUID id) {
