@@ -18,16 +18,16 @@ public class EventService {
     @Autowired
     private EventRepository eventRepository;
 
-    public Event createEvent(EventRequestDTO dto){
+    public Event createEvent(EventRequestDTO erdto){
 
         Event newEvent = new Event();
-        newEvent.setTitle(dto.title());
-        newEvent.setDescription(dto.description());
-        newEvent.setStartEvent(dto.startEvent());
-        newEvent.setEndEvent(dto.endEvent());
-        newEvent.setLocal(dto.local());
-        newEvent.setPrivateEvent(dto.privateEvent());
-        newEvent.setUser(dto.user());
+        newEvent.setTitle(erdto.title());
+        newEvent.setDescription(erdto.description());
+        newEvent.setStartEvent(erdto.startEvent());
+        newEvent.setEndEvent(erdto.endEvent());
+        newEvent.setLocal(erdto.local());
+        newEvent.setPrivateEvent(erdto.privateEvent());
+        newEvent.setUser(erdto.user());
         
         eventRepository.save(newEvent);
         return newEvent;
@@ -38,20 +38,20 @@ public class EventService {
     }
 
     public Optional<Event> getEventById(UUID id){
-        return Optional.of(eventRepository.findById(id).orElseThrow(() -> new RuntimeException("Event not found")));
+        return Optional.of(eventRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found")));
     }
 
-    public Event updateEvent(UUID id, EventRequestDTO dto){
+    public Event updateEvent(UUID id, EventRequestDTO erdto){
         
         Event updatedEvent = getEventById(id).orElseThrow();
         
-        updatedEvent.setTitle(dto.title());
-        updatedEvent.setDescription(dto.description());
-        updatedEvent.setStartEvent(dto.startEvent());
-        updatedEvent.setEndEvent(dto.endEvent());
-        updatedEvent.setLocal(dto.local());
-        updatedEvent.setPrivateEvent(dto.privateEvent());
-        updatedEvent.setUser(dto.user());
+        updatedEvent.setTitle(erdto.title());
+        updatedEvent.setDescription(erdto.description());
+        updatedEvent.setStartEvent(erdto.startEvent());
+        updatedEvent.setEndEvent(erdto.endEvent());
+        updatedEvent.setLocal(erdto.local());
+        updatedEvent.setPrivateEvent(erdto.privateEvent());
+        updatedEvent.setUser(erdto.user());
         return eventRepository.save(updatedEvent);
     }
 

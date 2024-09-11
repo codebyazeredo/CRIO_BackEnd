@@ -18,13 +18,13 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User createUser(UserRequestDTO userRequestDTO){
+    public User createUser(UserRequestDTO urdto){
 
         User newUser = new User();
-        newUser.setName(userRequestDTO.name());
-        newUser.setEmail(userRequestDTO.email());
-        newUser.setPassword(userRequestDTO.password());
-        newUser.setType(userRequestDTO.type());
+        newUser.setName(urdto.name());
+        newUser.setEmail(urdto.email());
+        newUser.setPassword(urdto.password());
+        newUser.setType(urdto.type());
         newUser.setCreatedAt(LocalDateTime.now());
 
         userRepository.save(newUser);
@@ -39,14 +39,14 @@ public class UserService {
         return Optional.of(userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found")));
     }
 
-    public User updateUser(UUID id, UserRequestDTO dto){
+    public User updateUser(UUID id, UserRequestDTO urdto){
         
         User updatedUser = getUserById(id).orElseThrow();
         
-        updatedUser.setName(dto.name());
-        updatedUser.setEmail(dto.email());
-        updatedUser.setPassword(dto.password());
-        updatedUser.setType(dto.type());
+        updatedUser.setName(urdto.name());
+        updatedUser.setEmail(urdto.email());
+        updatedUser.setPassword(urdto.password());
+        updatedUser.setType(urdto.type());
         updatedUser.setUpdatedAt(LocalDateTime.now());
 
         return userRepository.save(updatedUser);
