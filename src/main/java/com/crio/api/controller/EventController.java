@@ -16,10 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.crio.api.domain.address.Address;
 import com.crio.api.domain.event.Event;
 import com.crio.api.domain.event.EventRequestDTO;
 import com.crio.api.domain.user.User;
-import com.crio.api.service.EventService;
+import com.crio.api.service.AddressService;
+import com.crio.api.service.EventService; 
+import com.crio.api.service.UserService;
 
 @RestController
 @RequestMapping("/api/event")
@@ -28,19 +31,31 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
-    @PostMapping(consumes="multipart/form-data")
+    @Autowired
+    private UserService userService; 
+
+    @Autowired
+    private AddressService addressService; 
+
+    @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Event> create(
         @RequestParam("title") String title,
         @RequestParam("description") String description,
         @RequestParam("startEvent") LocalDateTime startEvent,
         @RequestParam("endEvent") LocalDateTime endEvent,
         @RequestParam("local") String local,
+        @RequestParam("howToGet") String howToGet,
+        @RequestParam("linkEvent") String linkEvent, 
         @RequestParam("privateEvent") Boolean privateEvent,
-        @RequestParam("user") User user) {        
-        
-            EventRequestDTO eventRequestDTO = new EventRequestDTO(title, description, startEvent, endEvent, local, privateEvent, user);
-            Event newEvent = this.eventService.createEvent(eventRequestDTO);
-            return ResponseEntity.ok(newEvent);
+        @RequestParam("userId") UUID userId, 
+        @RequestParam("addressId") UUID addressId) { 
+
+        User user = userService.getUserById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Address address = addressService.getAddressById(addressId).orElseThrow(() -> new RuntimeException("Address not found"));
+
+        EventRequestDTO eventRequestDTO = new EventRequestDTO(title, description, startEvent, endEvent, local, howToGet, linkEvent, privateEvent, user, address);
+        Event newEvent = this.eventService.createEvent(eventRequestDTO);
+        return ResponseEntity.ok(newEvent);
     }
 
     @GetMapping
@@ -50,24 +65,35 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Event> getEventById(@PathVariable("id") UUID id){
+    public ResponseEntity<Event> getEventById(@PathVariable("id") UUID id) {
         Optional<Event> event = eventService.getEventById(id);
         return event.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Event> updateEvent(@PathVariable UUID id, EventRequestDTO erdto){ 
-        Event updatedEvent = this.eventService.updateEvent(id, erdto);      
+    public ResponseEntity<Event> updateEvent(@PathVariable UUID id,
+        @RequestParam("title") String title,
+        @RequestParam("description") String description,
+        @RequestParam("startEvent") LocalDateTime startEvent,
+        @RequestParam("endEvent") LocalDateTime endEvent,
+        @RequestParam("local") String local,
+        @RequestParam("howToGet") String howToGet,
+        @RequestParam("linkEvent") String linkEvent,
+        @RequestParam("privateEvent") Boolean privateEvent,
+        @RequestParam("userId") UUID userId,
+        @RequestParam("addressId") UUID addressId) {
+
+        User user = userService.getUserById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Address address = addressService.getAddressById(addressId).orElseThrow(() -> new RuntimeException("Address not found"));
+
+        EventRequestDTO eventRequestDTO = new EventRequestDTO(title, description, startEvent, endEvent, local, howToGet, linkEvent, privateEvent, user, address);
+        Event updatedEvent = this.eventService.updateEvent(id, eventRequestDTO);
         return ResponseEntity.ok(updatedEvent);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") UUID id){
+    public ResponseEntity<Void> deleteEvent(@PathVariable("id") UUID id) { 
         eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
     }
 }
-    
-    
-
-

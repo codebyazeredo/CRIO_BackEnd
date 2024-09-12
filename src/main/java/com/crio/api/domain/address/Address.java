@@ -1,4 +1,4 @@
-package com.crio.api.domain.Invite;
+package com.crio.api.domain.address;
 
 import java.util.UUID;
 
@@ -18,13 +18,16 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="invite")
-public class Invite {
+@Table(name="address")
+public class Address {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
+    @Column(name = "city", length = 255, nullable = false)
+    private String city;
     
-    @Column(name = "confirmation")
-    private Boolean confirmation;
+    @Column(name = "uf", length = 2)
+    private String uf;
 }

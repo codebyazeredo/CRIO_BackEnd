@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.crio.api.domain.address.Address;
 import com.crio.api.domain.user.User;
 
 import jakarta.persistence.Column;
@@ -14,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -47,6 +49,12 @@ public class Event {
     @Column(name="local",  length = 255, nullable = false)
     private String local;
 
+    @Column(name="how_to_get",  length = 255, nullable = false)
+    private String howToGet;
+
+    @Column(name="link_event",  length = 255, nullable = false)
+    private String linkEvent;
+
     @Column(name = "private_Event")
     @ColumnDefault("true")
     private Boolean privateEvent;
@@ -54,4 +62,8 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToOne 
+    @JoinColumn(name="endereco_id")
+    private Address address;
 }
