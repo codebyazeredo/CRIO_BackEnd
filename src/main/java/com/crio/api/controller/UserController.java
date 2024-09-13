@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,10 +29,10 @@ public class UserController {
 
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<User> create(
-            @RequestParam("name") String name,
-            @RequestParam("email") String email,
-            @RequestParam("password") String password,
-            @RequestParam("type") Integer type) {
+            @RequestParam(value = "name", required = true) String name,
+            @RequestParam(value = "email", required = true) String email,
+            @RequestParam(value = "password", required = true) String password,
+            @RequestParam(value =  "type", required = true) Integer type) {
 
         UserRequestDTO userRequestDTO = new UserRequestDTO(name, email, password, type);
         User newUser = this.userService.createUser(userRequestDTO);
@@ -52,11 +53,12 @@ public class UserController {
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id") UUID id, UserRequestDTO userRequestDTO) {
-        User updatedUser = this.userService.updateUser(id, userRequestDTO);
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable("id") UUID id,
+            @RequestBody UserRequestDTO dto) {
+
+        User updatedUser = this.userService.updateUser(id, dto);
         return ResponseEntity.ok(updatedUser);
-       
     }
 
     @DeleteMapping("/{id}")
