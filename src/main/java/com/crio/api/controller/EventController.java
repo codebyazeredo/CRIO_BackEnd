@@ -21,34 +21,64 @@ import com.crio.api.domain.event.Event;
 import com.crio.api.domain.event.EventRequestDTO;
 import com.crio.api.domain.user.User;
 import com.crio.api.service.AddressService;
-import com.crio.api.service.EventService; 
+import com.crio.api.service.EventService;
 import com.crio.api.service.UserService;
 
 @RestController
 @RequestMapping("/api/event")
 public class EventController {
-    
+
     @Autowired
     private EventService eventService;
 
     @Autowired
-    private UserService userService; 
+    private UserService userService;
 
     @Autowired
-    private AddressService addressService; 
+    private AddressService addressService;
 
+    // //QUERY
+    // @GetMapping("/user/{userId}")
+    // public ResponseEntity<List<Event>> findByUserId(@PathVariable UUID userId) {
+    //     List<Event> events = eventService.findByUserId(userId);
+    //     return ResponseEntity.ok(events);
+    // }
+
+    // @PostMapping("/interval")
+    // public ResponseEntity<List<Event>> findByIntervalData(@RequestBody IntervalDataDTO dto) {
+    //     List<Event> events = eventService.findByIntervalData(dto);
+    //     return ResponseEntity.ok(events);
+    // }
+
+    // // @GetMapping("/local/{local}")
+    // // public ResponseEntity<List<Event>> findByLocal(@PathVariable String local) {
+    // //     List<Event> events = eventService.findByLocal(local);
+    // //     return ResponseEntity.ok(events);
+    // // }
+
+    // @PostMapping("/local-interval")
+    // public ResponseEntity<List<Event>> findLocalAndIntervalData(@RequestBody LocalIntervalDTO dto) {
+    //     List<Event> events = eventService.findByLocalAndIntervalData(
+    //             dto.getLocal(),
+    //             dto.getStartEvent(),
+    //             dto.getEndEvent()
+    //     );
+    //     return ResponseEntity.ok(events);
+    // }
+
+    //CRUD
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Event> create(
-        @RequestParam("title") String title,
-        @RequestParam("description") String description,
-        @RequestParam("startEvent") LocalDateTime startEvent,
-        @RequestParam("endEvent") LocalDateTime endEvent,
-        @RequestParam("local") String local,
-        @RequestParam("howToGet") String howToGet,
-        @RequestParam("linkEvent") String linkEvent, 
-        @RequestParam("privateEvent") Boolean privateEvent,
-        @RequestParam("userId") UUID userId, 
-        @RequestParam("addressId") UUID addressId) { 
+            @RequestParam("title") String title,
+            @RequestParam("description") String description,
+            @RequestParam("startEvent") LocalDateTime startEvent,
+            @RequestParam("endEvent") LocalDateTime endEvent,
+            @RequestParam("local") String local,
+            @RequestParam("howToGet") String howToGet,
+            @RequestParam("linkEvent") String linkEvent,
+            @RequestParam("privateEvent") Boolean privateEvent,
+            @RequestParam("userId") UUID userId,
+            @RequestParam("addressId") UUID addressId) {
 
         User user = userService.getUserById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Address address = addressService.getAddressById(addressId).orElseThrow(() -> new RuntimeException("Address not found"));
@@ -72,16 +102,16 @@ public class EventController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<Event> updateEvent(@PathVariable UUID id,
-        @RequestParam("title") String title,
-        @RequestParam("description") String description,
-        @RequestParam("startEvent") LocalDateTime startEvent,
-        @RequestParam("endEvent") LocalDateTime endEvent,
-        @RequestParam("local") String local,
-        @RequestParam("howToGet") String howToGet,
-        @RequestParam("linkEvent") String linkEvent,
-        @RequestParam("privateEvent") Boolean privateEvent,
-        @RequestParam("userId") UUID userId,
-        @RequestParam("addressId") UUID addressId) {
+            @RequestParam("title") String title,
+            @RequestParam("description") String description,
+            @RequestParam("startEvent") LocalDateTime startEvent,
+            @RequestParam("endEvent") LocalDateTime endEvent,
+            @RequestParam("local") String local,
+            @RequestParam("howToGet") String howToGet,
+            @RequestParam("linkEvent") String linkEvent,
+            @RequestParam("privateEvent") Boolean privateEvent,
+            @RequestParam("userId") UUID userId,
+            @RequestParam("addressId") UUID addressId) {
 
         User user = userService.getUserById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Address address = addressService.getAddressById(addressId).orElseThrow(() -> new RuntimeException("Address not found"));
@@ -92,7 +122,7 @@ public class EventController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEvent(@PathVariable("id") UUID id) { 
+    public ResponseEntity<Void> deleteEvent(@PathVariable("id") UUID id) {
         eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
     }

@@ -24,4 +24,6 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
     @Query("SELECT e FROM Event e WHERE e.local = :local AND e.startEvent BETWEEN :startEvent AND :endEvent")
     List<Event> findByLocalAndIntervalData(String local, LocalDateTime startEvent, LocalDateTime endEvent);
+
+    
 }

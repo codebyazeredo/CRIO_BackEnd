@@ -81,4 +81,10 @@ public class EventService {
     public void deleteEvent(UUID id) {
         eventRepository.deleteById(id);
     }
+
+    // public List<Event> findByIntervalData(IntervalDataDTO dto) {
+    //     LocalDateTime startEvent = dto.getStartEvent();
+    //     LocalDateTime endEvent = dto.getEndEvent();
+    //     return eventRepository.findByIntervalData(startEvent, endEvent);
+    // }
 }
