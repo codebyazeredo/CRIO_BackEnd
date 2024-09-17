@@ -3,8 +3,6 @@ package com.crio.api.domain.event;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import com.crio.api.domain.address.Address;
 import com.crio.api.domain.user.User;
 
@@ -56,8 +54,7 @@ public class Event {
     private String linkEvent;
 
     @Column(name = "private_Event")
-    @ColumnDefault("true")
-    private Boolean privateEvent;
+    private Boolean privateEvent = true;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

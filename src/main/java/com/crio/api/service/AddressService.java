@@ -47,4 +47,12 @@ public class AddressService {
     public void deleteAddress(UUID id) {
         addressRepository.deleteById(id);
     }
+
+    public Optional<Address> findByCity(String city) {
+        return addressRepository.findByCity(city);
+    }
+    
+    public Optional<Address> findByUf(String uf) {
+        return addressRepository.findByUf(uf);
+    }
 }

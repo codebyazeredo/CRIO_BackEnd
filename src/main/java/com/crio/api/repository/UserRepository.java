@@ -14,8 +14,8 @@ import org.springframework.stereotype.Repository;
 import com.crio.api.domain.user.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, UUID>{
-    
+public interface UserRepository extends JpaRepository<User, UUID> {
+
     @Query("SELECT u FROM User u")
     List<User> findAllUser();
 
@@ -25,15 +25,24 @@ public interface UserRepository extends JpaRepository<User, UUID>{
     @Modifying
     @Query("UPDATE User u SET u.name = :name, u.email = :email, u.password = :password, u.type = :type, u.createdAt = :createdAt, u.updatedAt = :updatedAt WHERE u.id = :id")
     void updateUser(
-        @Param("id") UUID id,
-        @Param("name") String name,
-        @Param("email") String email,
-        @Param("password") String password,
-        @Param("type") Integer type,
-        @Param("createdAt") LocalDateTime createdAt,
-        @Param("updatedAt") LocalDateTime updatedAt
+            @Param("id") UUID id,
+            @Param("name") String name,
+            @Param("email") String email,
+            @Param("password") String password,
+            @Param("type") Integer type,
+            @Param("createdAt") LocalDateTime createdAt,
+            @Param("updatedAt") LocalDateTime updatedAt
     );
-    
+
     @Query("DELETE FROM User u WHERE u.id = :id")
     void deleteByIdUser(UUID id);
+
+    @Query("SELECT u FROM User u WHERE u.email = :email")
+    Optional<User> findUserByEmail(String email);
+
+    @Query("SELECT u FROM User u WHERE u.type = :type")
+    List<User> findUserByType(Integer type);
+
+    @Query("SELECT u FROM User u WHERE u.createdAt BETWEEN :createdAt AND :end")
+    List<User> findByCreatedAtBetween(LocalDateTime createdAt, LocalDateTime end);
 }

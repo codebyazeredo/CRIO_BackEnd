@@ -5,8 +5,5 @@ public record AddressRequestDTO (
     String uf
 ) {
 
-    public String getCity() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
 }

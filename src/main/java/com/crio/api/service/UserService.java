@@ -59,4 +59,18 @@ public class UserService {
     public void deleteUser(UUID id) {
         userRepository.deleteById(id);
     }
+
+     public Optional<User> findUserByEmail(String email) {
+       Optional<User> user = userRepository.findUserByEmail(email);
+       return user;
+    }
+
+    public List<User> findUserByType(Integer type) {
+        return userRepository.findUserByType(type);
+    }    
+
+    public List<User> findByCreatedAtBetween(LocalDateTime createdAt, LocalDateTime end) {
+        return userRepository.findByCreatedAtBetween(createdAt, end);
+    }
+
 }

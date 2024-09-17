@@ -2,6 +2,7 @@ package com.crio.api.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,5 +26,5 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     @Query("SELECT e FROM Event e WHERE e.local = :local AND e.startEvent BETWEEN :startEvent AND :endEvent")
     List<Event> findByLocalAndIntervalData(String local, LocalDateTime startEvent, LocalDateTime endEvent);
 
-    
+    public void deleteById(Optional<Event> event);   
 }

@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.crio.api.domain.address.Address;
 import com.crio.api.domain.event.Event;
 import com.crio.api.domain.event.EventRequestDTO;
+import com.crio.api.domain.event.IntervalDataDTO;
+import com.crio.api.domain.event.LocalIntervalDTO;
 import com.crio.api.domain.user.User;
 import com.crio.api.service.AddressService;
 import com.crio.api.service.EventService;
@@ -37,42 +40,42 @@ public class EventController {
     @Autowired
     private AddressService addressService;
 
-    // //QUERY
-    // @GetMapping("/user/{userId}")
-    // public ResponseEntity<List<Event>> findByUserId(@PathVariable UUID userId) {
-    //     List<Event> events = eventService.findByUserId(userId);
-    //     return ResponseEntity.ok(events);
-    // }
+    //QUERY
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Event>> findByUserId(@PathVariable UUID userId) {
+        List<Event> events = eventService.findByUserId(userId);
+        return ResponseEntity.ok(events);
+    }
 
-    // @PostMapping("/interval")
-    // public ResponseEntity<List<Event>> findByIntervalData(@RequestBody IntervalDataDTO dto) {
-    //     List<Event> events = eventService.findByIntervalData(dto);
-    //     return ResponseEntity.ok(events);
-    // }
+    @PostMapping("/interval")
+    public ResponseEntity<List<Event>> findEventByIntervalData(@RequestParam IntervalDataDTO dto) {
+        List<Event> events = eventService.findEventByIntervalData(dto);
+        return ResponseEntity.ok(events);
+    }
 
-    // // @GetMapping("/local/{local}")
-    // // public ResponseEntity<List<Event>> findByLocal(@PathVariable String local) {
-    // //     List<Event> events = eventService.findByLocal(local);
-    // //     return ResponseEntity.ok(events);
-    // // }
+    @GetMapping("/local/{local}")
+    public ResponseEntity<List<Event>> findByLocal(@PathVariable String local) {
+        List<Event> events = eventService.findByLocal(local);
+        return ResponseEntity.ok(events);
+    }
 
-    // @PostMapping("/local-interval")
-    // public ResponseEntity<List<Event>> findLocalAndIntervalData(@RequestBody LocalIntervalDTO dto) {
-    //     List<Event> events = eventService.findByLocalAndIntervalData(
-    //             dto.getLocal(),
-    //             dto.getStartEvent(),
-    //             dto.getEndEvent()
-    //     );
-    //     return ResponseEntity.ok(events);
-    // }
+    @PostMapping("/local-interval")
+    public ResponseEntity<List<Event>> findLocalAndIntervalData(@RequestParam LocalIntervalDTO dto) {
+        List<Event> events = eventService.findByLocalAndIntervalData(
+                dto.local(),
+                dto.startEvent(),
+                dto.endEvent()
+        );
+        return ResponseEntity.ok(events);
+    }
 
     //CRUD
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Event> create(
             @RequestParam("title") String title,
             @RequestParam("description") String description,
-            @RequestParam("startEvent") LocalDateTime startEvent,
-            @RequestParam("endEvent") LocalDateTime endEvent,
+            @RequestParam("startEvent") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startEvent,
+            @RequestParam("endEvent") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endEvent,
             @RequestParam("local") String local,
             @RequestParam("howToGet") String howToGet,
             @RequestParam("linkEvent") String linkEvent,
@@ -80,8 +83,10 @@ public class EventController {
             @RequestParam("userId") UUID userId,
             @RequestParam("addressId") UUID addressId) {
 
-        User user = userService.getUserById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        Address address = addressService.getAddressById(addressId).orElseThrow(() -> new RuntimeException("Address not found"));
+        User user = userService.getUserById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Address address = addressService.getAddressById(addressId)
+                .orElseThrow(() -> new RuntimeException("Address not found"));
 
         EventRequestDTO eventRequestDTO = new EventRequestDTO(title, description, startEvent, endEvent, local, howToGet, linkEvent, privateEvent, user, address);
         Event newEvent = this.eventService.createEvent(eventRequestDTO);
@@ -101,24 +106,11 @@ public class EventController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Event> updateEvent(@PathVariable UUID id,
-            @RequestParam("title") String title,
-            @RequestParam("description") String description,
-            @RequestParam("startEvent") LocalDateTime startEvent,
-            @RequestParam("endEvent") LocalDateTime endEvent,
-            @RequestParam("local") String local,
-            @RequestParam("howToGet") String howToGet,
-            @RequestParam("linkEvent") String linkEvent,
-            @RequestParam("privateEvent") Boolean privateEvent,
-            @RequestParam("userId") UUID userId,
-            @RequestParam("addressId") UUID addressId) {
-
-        User user = userService.getUserById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        Address address = addressService.getAddressById(addressId).orElseThrow(() -> new RuntimeException("Address not found"));
-
-        EventRequestDTO eventRequestDTO = new EventRequestDTO(title, description, startEvent, endEvent, local, howToGet, linkEvent, privateEvent, user, address);
-        Event updatedEvent = this.eventService.updateEvent(id, eventRequestDTO);
+    public ResponseEntity<Event> updateEvent(@PathVariable("id") UUID id, EventRequestDTO dto) {
+        Event updatedEvent = this.eventService.updateEvent(id, dto);
+        System.out.println(dto);
         return ResponseEntity.ok(updatedEvent);
+
     }
 
     @DeleteMapping("/{id}")
