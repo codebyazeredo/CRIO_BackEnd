@@ -20,13 +20,13 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     List<User> findAllUser();
 
     @Query("SELECT u FROM User u WHERE u.id = :id")
-    Optional<User> findByIdUser(UUID id);
+    Optional<User> findByIdUser(@Param("id") UUID id);
 
     @Modifying
-    @Query("UPDATE User u SET u.name = :name, u.email = :email, u.password = :password, u.type = :type, u.createdAt = :createdAt, u.updatedAt = :updatedAt WHERE u.id = :id")
+    @Query("UPDATE User u SET u.username = :username, u.email = :email, u.password = :password, u.type = :type, u.createdAt = :createdAt, u.updatedAt = :updatedAt WHERE u.id = :id")
     void updateUser(
             @Param("id") UUID id,
-            @Param("name") String name,
+            @Param("username") String username,
             @Param("email") String email,
             @Param("password") String password,
             @Param("type") Integer type,
@@ -34,15 +34,22 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             @Param("updatedAt") LocalDateTime updatedAt
     );
 
+    @Modifying
     @Query("DELETE FROM User u WHERE u.id = :id")
-    void deleteByIdUser(UUID id);
+    void deleteByIdUser(@Param("id") UUID id);
 
     @Query("SELECT u FROM User u WHERE u.email = :email")
-    Optional<User> findUserByEmail(String email);
+    Optional<User> findUserByEmail(@Param("email") String email);
 
     @Query("SELECT u FROM User u WHERE u.type = :type")
-    List<User> findUserByType(Integer type);
+    List<User> findUserByType(@Param("type") Integer type);
 
-    @Query("SELECT u FROM User u WHERE u.createdAt BETWEEN :createdAt AND :end")
-    List<User> findByCreatedAtBetween(LocalDateTime createdAt, LocalDateTime end);
+    @Query("SELECT u FROM User u WHERE u.createdAt BETWEEN :startDate AND :endDate")
+    List<User> findByCreatedAtBetween(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
+
+    @Query("SELECT u FROM User u WHERE u.username = :username")
+    Optional<User> findByUsername(@Param("username") String username);
 }

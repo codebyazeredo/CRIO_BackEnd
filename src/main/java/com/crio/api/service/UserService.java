@@ -23,7 +23,7 @@ public class UserService {
     public User createUser(UserRequestDTO urdto) {
 
         User newUser = new User();
-        newUser.setName(urdto.name());
+        newUser.setUsername(urdto.username());
         newUser.setEmail(urdto.email());
         newUser.setPassword(urdto.password());
         newUser.setType(urdto.type());
@@ -47,7 +47,7 @@ public class UserService {
     public User updateUser(UUID id, UserRequestDTO urdto) {
         
         User user = getUserById(id).orElseThrow();
-        user.setName(urdto.name());
+        user.setUsername(urdto.username());
         user.setEmail(urdto.email());
         user.setPassword(urdto.password());
         user.setType(urdto.type());
